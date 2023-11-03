@@ -14,7 +14,12 @@ import {
 import { PropertyType } from '@prisma/client';
 import { AuthGuard } from 'src/guards/auth.gaurds';
 import { User, UserType } from 'src/user/decorators/user.decorators';
-import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dto/home.dto';
+import {
+  CreateHomeDto,
+  HomeResponseDto,
+  InquireDto,
+  UpdateHomeDto,
+} from './dto/home.dto';
 import { HomeService } from './home.service';
 
 @Controller('home')
@@ -79,5 +84,27 @@ export class HomeController {
       throw new UnauthorizedException();
     }
     return this.homeService.deletedHome(id);
+  }
+
+  @Post('/:id/inquire')
+  async inquire(
+    @Param('id', ParseIntPipe) homeId: number,
+    @User() user: UserType,
+    @Body() { message }: InquireDto,
+  ) {
+    return this.homeService.inquire(user, homeId, message);
+  }
+
+  @Get('/:id/messages')
+  async getHomeMessages(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserType,
+  ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException();
+    }
+    return this.homeService.getMessagesByHome(id);
   }
 }

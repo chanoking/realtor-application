@@ -1,14 +1,14 @@
 import { PropertyType } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
 import {
-    IsArray,
-    IsEnum,
-    IsNotEmpty,
-    IsNumber,
-    IsOptional,
-    IsPositive,
-    IsString,
-    ValidateNested,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  ValidateNested,
 } from 'class-validator';
 
 export class HomeResponseDto {
@@ -129,4 +129,10 @@ export class UpdateHomeDto {
   @IsOptional()
   @IsEnum(PropertyType)
   propertyType?: PropertyType;
+}
+
+export class InquireDto {
+  @IsString()
+  @IsNotEmpty()
+  message: string;
 }
